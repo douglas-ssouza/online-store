@@ -12,5 +12,8 @@
   ],
   "parserOptions": {
     "project": "tsconfig.json"
+  },
+  "rules": {
+    "images-no-direct-imports": 0
   }
 }
