@@ -4,5 +4,5 @@
   "plugins": [
     "@typescript-eslint"
   ],
-  "extends": "plugin:@shopify/esnext"
+  "extends": ["plugin:@shopify/esnext", "plugin:@shopify/react", "plugin:@shopify/typescript"]
 }
