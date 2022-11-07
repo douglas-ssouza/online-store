@@ -4,5 +4,13 @@
   "plugins": [
     "@typescript-eslint"
   ],
-  "extends": ["plugin:@shopify/esnext", "plugin:@shopify/react", "plugin:@shopify/typescript"]
+  "extends": [
+    "plugin:@shopify/esnext",
+    "plugin:@shopify/react",
+    "plugin:@shopify/typescript",
+    "plugin:@shopify/typescript-type-checking"
+  ],
+  "parserOptions": {
+    "project": "tsconfig.json"
+  }
 }
