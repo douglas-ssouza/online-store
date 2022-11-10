@@ -3,22 +3,19 @@ import Grid from '@mui/material/Grid';
 import Select, {SelectChangeEvent} from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
 import SearchIcon from '@mui/icons-material/Search';
 import Typography from '@mui/material/Typography';
 
 import * as api from '../services';
-
-interface Category {
-  id: string;
-  name: string;
-}
+import IProduct from '../interfaces/IProduct';
+import ICategory from '../interfaces/ICategory';
 
 function Home() {
-  const [categories, setCategories] = useState<Category[] | []>();
+  const [categories, setCategories] = useState<ICategory[] | []>([]);
   const [category, setCategory] = useState('Todas');
   const [query, setQuery] = useState('');
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<IProduct[] | []>([]);
 
   const changeSelect = (event: SelectChangeEvent) => {
     setCategory(event.target.value);
@@ -37,11 +34,16 @@ function Home() {
     setQuery(target.value);
   };
 
-  const searchProducts = async () => {
-    const selectedCategory = categories?.find((item) => item.name === category);
+  const searchProducts = () => {
+    const selectedCategory = categories.find((item) => item.name === category);
     const categoryId = selectedCategory?.id ?? '';
-    const response = await api.getProductsFromCategoryAndQuery(categoryId, query);
-    setProducts(response);
+    api.getProductsFromCategoryAndQuery(categoryId, query)
+      .then((response) => {
+        setProducts(response.results);
+      })
+      .catch((error) => {
+        throw error;
+      });
   };
 
   return (
@@ -52,7 +54,7 @@ function Home() {
           onChange={changeSelect}
         >
           {
-            categories?.map(({id, name}) =>
+            categories.map(({id, name}) =>
               <MenuItem key={id} value={name}>{name}</MenuItem>)
           }
         </Select>
@@ -60,14 +62,34 @@ function Home() {
           value={query}
           onChange={changeInput}
         />
-        <IconButton aria-label="search" size="large" color="primary" edge="end">
-          <SearchIcon />
-        </IconButton>
+        <Button
+          variant="contained"
+          size="large"
+          color="primary"
+          onClick={searchProducts}
+          endIcon={<SearchIcon />}
+        >
+          Buscar
+        </Button>
       </Grid>
       <Grid item>
-        <Typography component="h2" variant="h5" align="center">
-          Digite algum termo de pesquisa ou escolha uma categoria
-        </Typography>
+        {
+          products.length === 0
+            ? <Typography component="h2" variant="h5" align="center">
+                Digite algum termo de pesquisa ou escolha uma categoria
+              </Typography>
+            : <Grid container>
+                {
+                  products.map((product) =>
+                    <Grid key={product.id} item>
+                      <Typography component="h3" variant="h5">
+                        {product.title}
+                      </Typography>
+                      <img src={product.thumbnail} alt={product.title} />
+                    </Grid>)
+                }
+              </Grid>
+        }
       </Grid>
     </Grid>
   );

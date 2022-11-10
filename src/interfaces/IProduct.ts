@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-export default interface Iproduct {
+export default interface IProduct {
   id: string;
   site_id: string;
   title: string;
