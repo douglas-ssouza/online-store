@@ -15,10 +15,12 @@ interface Category {
 }
 
 function Home() {
-  const [categories, setCategories] = useState<Category[]>([{id: '', name: 'Todas'}]);
-  const [category, setCategory] = useState(categories[0].name);
+  const [categories, setCategories] = useState<Category[] | []>();
+  const [category, setCategory] = useState('Todas');
+  const [query, setQuery] = useState('');
+  const [products, setProducts] = useState([]);
 
-  const handleChange = (event: SelectChangeEvent) => {
+  const changeSelect = (event: SelectChangeEvent) => {
     setCategory(event.target.value);
   };
 
@@ -31,19 +33,33 @@ function Home() {
     fetchCategories();
   }, []);
 
+  const changeInput = ({target}: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(target.value);
+  };
+
+  const searchProducts = async () => {
+    const selectedCategory = categories?.find((item) => item.name === category);
+    const categoryId = selectedCategory?.id ?? '';
+    const response = await api.getProductsFromCategoryAndQuery(categoryId, query);
+    setProducts(response);
+  };
+
   return (
     <Grid container direction="column" alignItems="center">
       <Grid item>
         <Select
           value={category}
-          onChange={handleChange}
+          onChange={changeSelect}
         >
           {
-            categories.map(({id, name}) =>
+            categories?.map(({id, name}) =>
               <MenuItem key={id} value={name}>{name}</MenuItem>)
           }
         </Select>
-        <TextField />
+        <TextField
+          value={query}
+          onChange={changeInput}
+        />
         <IconButton aria-label="search" size="large" color="primary" edge="end">
           <SearchIcon />
         </IconButton>
