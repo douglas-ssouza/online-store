@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import {useNavigate} from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Select, {SelectChangeEvent} from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -17,9 +18,7 @@ function Home() {
   const [query, setQuery] = useState('');
   const [products, setProducts] = useState<IProduct[] | []>([]);
 
-  const changeSelect = (event: SelectChangeEvent) => {
-    setCategory(event.target.value);
-  };
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -29,6 +28,10 @@ function Home() {
 
     fetchCategories();
   }, []);
+
+  const changeSelect = (event: SelectChangeEvent) => {
+    setCategory(event.target.value);
+  };
 
   const changeInput = ({target}: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(target.value);
@@ -44,6 +47,10 @@ function Home() {
       .catch((error) => {
         throw error;
       });
+  };
+
+  const seeProductDetails = (productId: string) => {
+    navigate(`/products/${productId}`);
   };
 
   return (
@@ -86,6 +93,12 @@ function Home() {
                         {product.title}
                       </Typography>
                       <img src={product.thumbnail} alt={product.title} />
+                      <Button
+                        variant="contained"
+                        onClick={() => seeProductDetails(product.id)}
+                      >
+                        Detalhes
+                      </Button>
                     </Grid>)
                 }
               </Grid>
