@@ -9,8 +9,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import Typography from '@mui/material/Typography';
 
 import * as api from '../services';
-import Product from '../interfaces/Product';
-import Category from '../interfaces/Category';
+import Product from '../types/Product';
+import Category from '../types/Category';
 
 function Home() {
   const [categories, setCategories] = useState<Category[] | []>([]);
