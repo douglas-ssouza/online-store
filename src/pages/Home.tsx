@@ -9,14 +9,14 @@ import SearchIcon from '@mui/icons-material/Search';
 import Typography from '@mui/material/Typography';
 
 import * as api from '../services';
-import IProduct from '../interfaces/IProduct';
-import ICategory from '../interfaces/ICategory';
+import Product from '../interfaces/Product';
+import Category from '../interfaces/Category';
 
 function Home() {
-  const [categories, setCategories] = useState<ICategory[] | []>([]);
-  const [category, setCategory] = useState('Todas');
+  const [categories, setCategories] = useState<Category[] | []>([]);
+  const [category, setCategory] = useState('');
   const [query, setQuery] = useState('');
-  const [products, setProducts] = useState<IProduct[] | []>([]);
+  const [products, setProducts] = useState<Product[] | []>([]);
 
   const navigate = useNavigate();
 
@@ -24,6 +24,7 @@ function Home() {
     const fetchCategories = async () => {
       const response = await api.getCategories();
       setCategories([{id: '', name: 'Todas'}, ...response]);
+      setCategory('Todas');
     };
 
     fetchCategories();
